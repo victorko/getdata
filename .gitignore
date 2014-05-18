@@ -1,1 +1,5 @@
+# Data folder
 data/
+
+# Rhistory file
+*.Rhistory
