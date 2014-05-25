@@ -3,3 +3,6 @@ data/
 
 # Rhistory file
 *.Rhistory
+
+# *.md previews
+*.html

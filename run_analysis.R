@@ -1,22 +1,34 @@
 
+# -----------------------------------------------------------------------------------------------------
+#
+#  Human Activity Recognition Using Smartphones Data Set analysis script
+#
+#  It downloads source data set, does analysis ad data transformation and stores the result in data
+#  folder in CSV format (data.csv file).
+#
+# -----------------------------------------------------------------------------------------------------
 
-
-#### Constants
-
-DATA_URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-DATA_FOLDER_PATH <- "./data"
-DO_DOWNLOAD <- FALSE
 
 
 #### Main script function
 
 runAnalysis <- function () {
+            
+    
+    ## Script settings
+    
+    # the URL to download data from
+    DATA_URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+    
+    # data folder path in which the original data set and the result (data.csv file) will be stored
+    DATA_FOLDER_PATH <- "./data"
+        
+    
+    ## Script processing steps
     
     # download data
-    if (DO_DOWNLOAD) {
-        message("Downloading and unpacking data")
-        downloadData(DATA_URL, DATA_FOLDER_PATH)
-    }
+    message("Downloading and unpacking data")
+    downloadData(DATA_URL, DATA_FOLDER_PATH)
     
     # get feature names and numbers table
     features <- getFeatureNamesAndNumbers(DATA_FOLDER_PATH)
@@ -26,19 +38,19 @@ runAnalysis <- function () {
     
     # read test data set
     message("Reading test data set")
-    testDataSet <- readDataSet(paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/X_test.txt", sep = "/"), 
-                               features,
-                               paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/y_test.txt", sep = "/"),
-                               activities,
-                               paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/subject_test.txt", sep = "/"))
+    featuresDataFilePath   <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/X_test.txt", sep = "/")
+    activitiesDataFilePath <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/y_test.txt", sep = "/")
+    subjectsDataFilePath   <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/test/subject_test.txt", sep = "/")
+    testDataSet <- readDataSet(
+        featuresDataFilePath, features, activitiesDataFilePath, activities, subjectsDataFilePath)
     
     # read train data set
     message("Reading train data set")
-    trainDataSet <- readDataSet(paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/X_train.txt", sep = "/"), 
-                                features,
-                                paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/y_train.txt", sep = "/"),
-                                activities,
-                                paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/subject_train.txt", sep = "/"))
+    featuresDataFilePath   <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/X_train.txt", sep = "/")
+    activitiesDataFilePath <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/y_train.txt", sep = "/")
+    subjectsDataFilePath   <- paste(DATA_FOLDER_PATH, "UCI HAR Dataset/train/subject_train.txt", sep = "/")
+    trainDataSet <- readDataSet(
+        featuresDataFilePath, features, activitiesDataFilePath, activities, subjectsDataFilePath)
     
     # merge test and train data
     message("Merging data")
@@ -105,8 +117,10 @@ getActivityNamesAndNumbers <- function (dataFolderPath) {
 }
 
 # Read data set
-readDataSet <- function (featuresDataFilePath, featureNames,
-                         activitiesDataFilePath, activityNames,
+readDataSet <- function (featuresDataFilePath, 
+                         featureNames,
+                         activitiesDataFilePath, 
+                         activityNames,
                          subjectsDataFilePath) {
     
     # read features data from file
